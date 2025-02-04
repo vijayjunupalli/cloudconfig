@@ -45,7 +45,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: refresh
   endpoint:
     gateway:
       enabled: true
