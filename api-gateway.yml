@@ -49,6 +49,8 @@ management:
   endpoint:
     gateway:
       enabled: true
+    refresh:
+      enabled: true
   tracing:
     sampling:
       probability: 1.0  # 100% tracing (adjust for production)
