@@ -7,3 +7,9 @@ eureka:
   client:
     registerWithEureka: false  # Eureka Server should not register itself
     fetchRegistry: false  # It does not need to fetch from other instances
+
+management:
+    endpoints:
+      web:
+        exposure:
+          include: refresh
