@@ -1,0 +1,56 @@
+server:
+  port: 1998  # API Gateway runs on port 1998
+
+spring:
+  application:
+    name: api-gateway
+  zipkin:
+    base-url: http://localhost:9411  # Zipkin Server URL
+    tracing:
+      sampling:
+        probability: 1.0  # 100% tracing for all requests
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true  # Enables Eureka service discovery for routing
+          lower-case-service-id: true
+
+      routes:
+        - id: first-microservice
+          uri: lb://FIRST-MICROSERVICE  # Load balances requests to first-microservice
+          predicates:
+            - Path=/first/**  # Requests with /first/** will be routed
+          filters:
+            - StripPrefix=1  # Removes "/first" before forwarding request
+
+        - id: second-microservice
+          uri: lb://SECOND-MICROSERVICE  # Load balances requests to second-microservice
+          predicates:
+            - Path=/second/**  # Requests with /second/** will be routed
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: false
+
+# Enable actuators
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+  tracing:
+    sampling:
+      probability: 1.0  # 100% tracing (adjust for production)
+    zipkin:
+      tracing.endpoint: http://localhost:9411/api/v2/spans  # Zipkin endpoint
